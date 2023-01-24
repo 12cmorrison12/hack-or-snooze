@@ -60,16 +60,14 @@ async function submitStory(evt) {
   const storyURL = $("#new-story-url").val();
   const storyTitle = $("#new-story-title").val();
 
-  console.log(storyAuthor, storyURL, storyTitle);
   const newStory = {
     author: storyAuthor,
     url: storyURL,
     title: storyTitle
   };
-  // User.login retrieves user info from API and returns User instance
-  // which we'll make the globally-available, logged-in user.
+
+  //finds user info and adds to story list as well as user memory
   const response = await StoryList.addStory(user, newStory);
-  console.log(response);
 }
 
 $storyForm.on("submit", submitStory);
