@@ -45,3 +45,24 @@ function navSubmitClick(evt) {
 }
 
 $storyForm.on("click", navSubmitClick);
+
+/** When a user clicks on profile */
+function showProfileClick(evt) {
+  console.debug("shoProfileClick");
+  $(".main-nav-links").show();
+  hidePageComponents();
+  $userProfile.show();
+}
+
+$userProfile.on("click", showProfileClick);
+
+/** When a user clicks user stories link */
+
+function showUserStoriesClick(evt) {
+  console.debug("showUserStoriesClick");
+  $(".main-nav-links").show();
+  hidePageComponents();
+  $faveStories.show();
+}
+
+$faveStories.on("click", showUserStoriesClick);

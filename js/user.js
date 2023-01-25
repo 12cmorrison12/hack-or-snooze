@@ -100,6 +100,14 @@ function saveUserCredentialsInLocalStorage() {
  * General UI stuff about users
  */
 
+function userProfile() {
+  console.debug("userProfile");
+
+  $("#profile-name").text(currentUser.name);
+  $("#profile-username").text(currentUser.username);
+  $("#profile-account-date").text(currentUser.createdAt.slice(0,10));
+}
+
 /** When a user signs up or registers, we want to set up the UI for them:
  *
  * - show the stories list
@@ -113,4 +121,6 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
 
   updateNavOnLogin();
+  userProfile();
 }
+

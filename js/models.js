@@ -73,15 +73,33 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  static async addStory(userToken, title, author, url) {
+  static async addStory(userToken, title, author, url, user) {
+    const userToken = user.loginToken;
     const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "POST",
-      data: { token: userToken, story: { title, author, url } }
+      data: { userToken, story: { title, author, url } }
     });
-    newStory = response.data;
+    newStory = response.data.story;
+    this.stories.unshift(newStory);
+    user.ownStories.unshift(newStory);
 
     return new Story(newStory);
+  }
+
+  /**Removes story from API and story list array */
+
+  async removeStory(user, storyId) {
+    const userToken = user.loginToken;
+    await axios({
+      url:`${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: {token: user.loginToken}
+    });
+
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
   }
 }
 
@@ -201,20 +219,6 @@ class User {
     }
   }
 
-  /**Add a story to favorites, update API */
-
-  async addFavorite (story) {
-    this.favorites.push(story);
-    await this.storyFavesAddOrRemove("add", story);
-  }
-
-  /**Remove a story from favorites, update API */
-
-  async removeFavorite(story) {
-    this.favorites = this.favorites.filters(stry => stry.storyId !== story.storyId);
-    await this.storyFavesAddOrRemove("remove", story);
-  }
-
   /**Function to update API with a new favorite or removal of favorite story */
 
   async storyFavesAddOrRemove(newState, story) {
@@ -232,6 +236,20 @@ class User {
       data: {token},
     });
   }
+
+    /**Add a story to favorites, update API */
+
+    async addFavorite (story) {
+      this.favorites.push(story);
+      await this.storyFavesAddOrRemove("add", story);
+    }
+  
+    /**Remove a story from favorites, update API */
+  
+    async removeFavorite(story) {
+      this.favorites = this.favorites.filters(stry => stry.storyId !== story.storyId);
+      await this.storyFavesAddOrRemove("remove", story);
+    }  
 
   /**Return true or false if the stories on the front page are in the user's favorites */
 
