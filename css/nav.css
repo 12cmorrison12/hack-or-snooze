@@ -8,6 +8,10 @@ nav {
   border-radius: 3px 3px 0 0;
 }
 
+.main-nav-links {
+  margin: 0 10px;
+}
+
 .navbar-brand {
   font-weight: bold;
 }
