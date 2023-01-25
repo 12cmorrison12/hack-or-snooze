@@ -200,4 +200,42 @@ class User {
       return null;
     }
   }
+
+  /**Add a story to favorites, update API */
+
+  async addFavorite (story) {
+    this.favorites.push(story);
+    await this.storyFavesAddOrRemove("add", story);
+  }
+
+  /**Remove a story from favorites, update API */
+
+  async removeFavorite(story) {
+    this.favorites = this.favorites.filters(stry => stry.storyId !== story.storyId);
+    await this.storyFavesAddOrRemove("remove", story);
+  }
+
+  /**Function to update API with a new favorite or removal of favorite story */
+
+  async storyFavesAddOrRemove(newState, story) {
+    const method = newState;
+    if(newState === "add") {
+      "POST";
+    } else if(newState === "remove") {
+      "DELETE";
+    }
+
+    const token = this.loginToken;
+    await axious({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: method,
+      data: {token},
+    });
+  }
+
+  /**Return true or false if the stories on the front page are in the user's favorites */
+
+  isFave(story) {
+    return this.favorites.some(stories => stories.storyId === story.storyId);
+  }
 }
